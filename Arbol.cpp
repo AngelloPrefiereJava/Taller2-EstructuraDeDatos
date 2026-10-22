@@ -5,7 +5,7 @@ Arbol::Arbol(){
     this->armarArbol();
 }
 
-Arbol::Arbol(){
+Arbol::~Arbol(){
     destruirRecursivo(this->root);
 }
 
