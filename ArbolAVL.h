@@ -21,6 +21,11 @@ private:
     void destruirRecursivo(NodoAVL* nodo);
     void inordenRecursivo(NodoAVL* nodo);
 
+    NodoAVL* balancear(NodoAVL* nodo);
+    NodoAVL* minimoNodo(NodoAVL* nodo);
+    NodoAVL* quitarMinimo(NodoAVL* nodo);
+    NodoAVL* eliminarRecursivo(NodoAVL* nodo, std::string id, bool& eliminado);
+
 public:
     ArbolAVL();
     ~ArbolAVL();
@@ -29,6 +34,7 @@ public:
     Paciente* buscarPorID(std::string id);
     void mostrarInorden();
     bool estaVacio() const;
+    bool eliminar(std::string id);
 };
 
 #endif

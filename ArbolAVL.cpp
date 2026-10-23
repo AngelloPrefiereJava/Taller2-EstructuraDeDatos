@@ -127,3 +127,72 @@ bool ArbolAVL::estaVacio() const {
     return this->root == nullptr;
 }
 
+NodoAVL* ArbolAVL::balancear(NodoAVL* nodo) {
+    nodo->setAltura(1 + max(altura(nodo->getLeft()), altura(nodo->getRight())));
+    int balance = obtenerBalance(nodo);
+
+    if (balance > 1) {
+        if (obtenerBalance(nodo->getLeft()) < 0) {
+            nodo->setLeft(rotarLeft(nodo->getLeft()));
+        }
+        return rotarRight(nodo);
+    }
+
+    if (balance < -1) {
+        if (obtenerBalance(nodo->getRight()) > 0) {
+            nodo->setRight(rotarRight(nodo->getRight()));
+        }
+        return rotarLeft(nodo);
+    }
+
+    return nodo;
+}
+
+NodoAVL* ArbolAVL::minimoNodo(NodoAVL* nodo) {
+    while (nodo->getLeft() != nullptr) {
+        nodo = nodo->getLeft();
+    }
+    return nodo;
+}
+
+NodoAVL* ArbolAVL::quitarMinimo(NodoAVL* nodo) {
+    if (nodo->getLeft() == nullptr) {
+        NodoAVL* derecho = nodo->getRight();
+        delete nodo;
+        return derecho;
+    }
+    nodo->setLeft(quitarMinimo(nodo->getLeft()));
+    return balancear(nodo);
+}
+
+NodoAVL* ArbolAVL::eliminarRecursivo(NodoAVL* nodo, std::string id, bool& eliminado) {
+    if (nodo == nullptr) return nullptr;
+
+    if (id < nodo->getPaciente()->getId()) {
+        nodo->setLeft(eliminarRecursivo(nodo->getLeft(), id, eliminado));
+    } else if (id > nodo->getPaciente()->getId()) {
+        nodo->setRight(eliminarRecursivo(nodo->getRight(), id, eliminado));
+    } else {
+        eliminado = true;
+
+        if (nodo->getLeft() == nullptr || nodo->getRight() == nullptr) {
+            NodoAVL* hijo = (nodo->getLeft() != nullptr) ? nodo->getLeft() : nodo->getRight();
+            delete nodo->getPaciente();
+            delete nodo;
+            return hijo;
+        }
+
+        NodoAVL* sucesor = minimoNodo(nodo->getRight());
+        delete nodo->getPaciente();
+        nodo->setPaciente(sucesor->getPaciente());
+        nodo->setRight(quitarMinimo(nodo->getRight()));
+    }
+
+    return balancear(nodo);
+}
+
+bool ArbolAVL::eliminar(std::string id) {
+    bool eliminado = false;
+    this->root = eliminarRecursivo(this->root, id, eliminado);
+    return eliminado;
+}

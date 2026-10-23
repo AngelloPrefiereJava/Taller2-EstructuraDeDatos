@@ -21,6 +21,7 @@ public:
     void setLeft(NodoAVL* nodo);
     void setRight(NodoAVL* nodo);
     void setAltura(int h);
+    void setPaciente(Paciente* p);
 };
 
 #endif

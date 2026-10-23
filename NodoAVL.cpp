@@ -15,3 +15,4 @@ int NodoAVL::getAltura() const { return this->altura; }
 void NodoAVL::setLeft(NodoAVL* nodo) { this->left = nodo; }
 void NodoAVL::setRight(NodoAVL* nodo) { this->right = nodo; }
 void NodoAVL::setAltura(int h) { this->altura = h; }
+void NodoAVL::setPaciente(Paciente* p) { this->paciente = p; }
