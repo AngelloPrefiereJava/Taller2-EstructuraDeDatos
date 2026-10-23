@@ -104,3 +104,35 @@ std::string Arbol::evaluarRecursivo(NodoArbol* nodo, Paciente* p) {
     return "Desconocido";
 }
 
+static std::string aMinusculas(const std::string& s) {
+    std::string r = s;
+    for (size_t i = 0; i < r.size(); i++) {
+        if (r[i] >= 'A' && r[i] <= 'Z') {
+            r[i] = r[i] + 32;
+        }
+    }
+    return r;
+}
+
+bool Arbol::datosValidos(Paciente* p, std::string& motivo) {
+    if (p->getId().empty()) { motivo = "ID vacio"; return false; }
+    if (p->getNombre().empty()) { motivo = "nombre vacio"; return false; }
+    if (p->getEdad() < 0 || p->getEdad() > 120) { motivo = "edad fuera de rango (0-120)"; return false; }
+    if (p->getTemperatura() < 30 || p->getTemperatura() > 45) { motivo = "temperatura fuera de rango (30-45)"; return false; }
+    if (p->getPresionArterial() < 40 || p->getPresionArterial() > 300) { motivo = "presion fuera de rango (40-300)"; return false; }
+    if (p->getDolor() < 0 || p->getDolor() > 10) { motivo = "dolor fuera de rango (0-10)"; return false; }
+
+    std::string tipo = aMinusculas(p->getTipoDolor());
+    if (tipo != "pecho" && tipo != "cabeza" && tipo != "abdomen" && tipo != "extremidad" && tipo != "otro") {
+        motivo = "tipo de dolor desconocido";
+        return false;
+    }
+
+    if (p->getTrauma() != 0 && p->getTrauma() != 1) { motivo = "Trauma debe ser 0 o 1"; return false; }
+    if (p->getSintomasNeurologicos() != 0 && p->getSintomasNeurologicos() != 1) { motivo = "SintomasNeurologicos debe ser 0 o 1"; return false; }
+    if (p->getRequiereCirugia() != 0 && p->getRequiereCirugia() != 1) { motivo = "RequiereCirugia debe ser 0 o 1"; return false; }
+    if (p->getDiasHospitalizacion() < 0 || p->getDiasHospitalizacion() > 365) { motivo = "dias de hospitalizacion fuera de rango (0-365)"; return false; }
+
+    return true;
+}
+

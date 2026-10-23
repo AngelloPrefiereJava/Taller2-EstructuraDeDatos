@@ -20,6 +20,8 @@ private:
 
 public:
     Hospital();
+    int cargarDesdeArchivo(const std::string& ruta);
+    void atenderPacientes();
 };
 
 #endif

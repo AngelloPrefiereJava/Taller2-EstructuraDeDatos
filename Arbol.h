@@ -17,6 +17,6 @@ public:
 
     void armarArbol();
     std::string clasificarPaciente(Paciente* p);
-
+    static bool datosValidos(Paciente* p, std::string& motivo);
 };
 #endif
