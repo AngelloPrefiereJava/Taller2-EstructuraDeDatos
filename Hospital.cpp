@@ -136,3 +136,17 @@ void Hospital::atenderPacientes() {
         std::cout << "-------------------" << std::endl;
     }
 }
+
+
+void Hospital::verDepartamentos() {
+    std::cout << "\n=== DEPARTAMENTOS ===" << std::endl;
+
+    for (int i = 0; i < NUM_SERVICIOS; i++) {
+        std::cout << "\n" << this->nombres[i] << std::endl;
+        if (this->avl[i].estaVacio()) {
+            std::cout << "Sin pacientes" << std::endl;
+        } else {
+            this->avl[i].mostrarInorden();
+        }
+    }
+}

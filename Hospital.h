@@ -22,6 +22,7 @@ public:
     Hospital();
     int cargarDesdeArchivo(const std::string& ruta);
     void atenderPacientes();
+    void verDepartamentos();
 };
 
 #endif

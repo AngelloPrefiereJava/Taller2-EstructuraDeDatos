@@ -28,6 +28,7 @@ public:
     void insertar(Paciente* p);
     Paciente* buscarPorID(std::string id);
     void mostrarInorden();
+    bool estaVacio() const;
 };
 
 #endif

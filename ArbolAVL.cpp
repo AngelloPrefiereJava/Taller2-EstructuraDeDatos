@@ -121,3 +121,9 @@ void ArbolAVL::inordenRecursivo(NodoAVL* nodo) {
         inordenRecursivo(nodo->getRight());
     }
 }
+
+
+bool ArbolAVL::estaVacio() const {
+    return this->root == nullptr;
+}
+
