@@ -12,6 +12,7 @@ void ArbolAVL::destruirRecursivo(NodoAVL* nodo) {
     if (nodo != nullptr) {
         destruirRecursivo(nodo->getLeft());
         destruirRecursivo(nodo->getRight());
+        delete nodo->getPaciente();
         delete nodo; 
     }
 }
@@ -56,41 +57,26 @@ NodoAVL* ArbolAVL::rotarLeft(NodoAVL* x) {
     return y;
 }
 
-void ArbolAVL::insertar(Paciente* p) {
-    this->root = insertarRecursivo(this->root, p);
+bool ArbolAVL::insertar(Paciente* p) {
+    bool insertado = false;
+    this->root = insertarRecursivo(this->root, p, insertado);
+    return insertado;
 }
 
-NodoAVL* ArbolAVL::insertarRecursivo(NodoAVL* nodo, Paciente* p) {
+NodoAVL* ArbolAVL::insertarRecursivo(NodoAVL* nodo, Paciente* p, bool& insertado) {
     if (nodo == nullptr) {
+        insertado = true;
         return new NodoAVL(p);
     }
 
-    if (p->getEdad() < nodo->getPaciente()->getEdad()) {
-        nodo->setLeft(insertarRecursivo(nodo->getLeft(), p));
-    } else if (p->getEdad() >= nodo->getPaciente()->getEdad()) { 
-        nodo->setRight(insertarRecursivo(nodo->getRight(), p));
+        if (p->getId() < nodo->getPaciente()->getId()) {
+        nodo->setLeft(insertarRecursivo(nodo->getLeft(), p, insertado));
+    } else if (p->getId() > nodo->getPaciente()->getId()) {
+        nodo->setRight(insertarRecursivo(nodo->getRight(), p, insertado));
+    } else {
+        return nodo;
     }
-
-    nodo->setAltura(1 + max(altura(nodo->getLeft()), altura(nodo->getRight())));
-    int balance = obtenerBalance(nodo);
-
-    if (balance > 1 && p->getEdad() < nodo->getLeft()->getPaciente()->getEdad())
-        return rotarRight(nodo);
-
-    if (balance < -1 && p->getEdad() >= nodo->getRight()->getPaciente()->getEdad())
-        return rotarLeft(nodo);
-
-    if (balance > 1 && p->getEdad() >= nodo->getLeft()->getPaciente()->getEdad()) {
-        nodo->setLeft(rotarLeft(nodo->getLeft()));
-        return rotarRight(nodo);
-    }
-
-    if (balance < -1 && p->getEdad() < nodo->getRight()->getPaciente()->getEdad()) {
-        nodo->setRight(rotarRight(nodo->getRight()));
-        return rotarLeft(nodo);
-    }
-
-    return nodo;
+    return balancear(nodo);
 }
 
 Paciente* ArbolAVL::buscarPorID(std::string id) {
@@ -195,4 +181,31 @@ bool ArbolAVL::eliminar(std::string id) {
     bool eliminado = false;
     this->root = eliminarRecursivo(this->root, id, eliminado);
     return eliminado;
+}
+
+
+int ArbolAVL::getAltura() {
+    return altura(this->root);
+}
+
+int ArbolAVL::getBalanceRaiz() {
+    return obtenerBalance(this->root);
+}
+
+void ArbolAVL::mostrarFactoresBalance() {
+    if (this->root == nullptr) {
+        std::cout << "Sin pacientes" << std::endl;
+        return;
+    }
+    balancesRecursivo(this->root);
+}
+
+void ArbolAVL::balancesRecursivo(NodoAVL* nodo) {
+    if (nodo == nullptr) return;
+    std::cout << "ID " << nodo->getPaciente()->getId()
+              << " (" << nodo->getPaciente()->getNombre() << ")"
+              << " -> altura: " << altura(nodo)
+              << " | factor de balance: " << obtenerBalance(nodo) << std::endl;
+    balancesRecursivo(nodo->getLeft());
+    balancesRecursivo(nodo->getRight());
 }

@@ -103,6 +103,27 @@ int Hospital::cargarDesdeArchivo(const std::string& ruta) {
             delete p;
             continue;
         }
+        
+                bool duplicado = false;
+        for (int i = 0; i < totalIds; i++) {
+            if (idsVistos[i] == p->getId()) {
+                duplicado = true;
+                break;
+            }
+        }
+        if (duplicado) {
+            std::cout << "Linea " << numLinea << " rechazada: ID duplicado (" << p->getId() << ")." << std::endl;
+            delete p;
+            continue;
+        }
+
+        if (totalIds >= MAX_IDS) {
+            std::cout << "Linea " << numLinea << " rechazada: se alcanzo el maximo de " << MAX_IDS << " pacientes." << std::endl;
+            delete p;
+            continue;
+        }
+        idsVistos[totalIds] = p->getId();
+        totalIds++;
 
         this->cola.push(p);
         cargados++;
@@ -131,7 +152,11 @@ void Hospital::atenderPacientes() {
             delete p;
         } else {
             std::cout << "Servicio asignado: " << servicio << std::endl;
-            this->avl[indice].insertar(p);
+                        if (!this->avl[indice].insertar(p)) {
+                std::cout << "Error: el ID " << p->getId() << " ya existe en " << servicio
+                          << ". Paciente descartado." << std::endl;
+                delete p;
+            }
         }
         std::cout << "-------------------" << std::endl;
     }

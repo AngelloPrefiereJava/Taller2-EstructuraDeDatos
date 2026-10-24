@@ -16,7 +16,7 @@ private:
     NodoAVL* rotarRight(NodoAVL* y);
     NodoAVL* rotarLeft(NodoAVL* x);
     
-    NodoAVL* insertarRecursivo(NodoAVL* nodo, Paciente* p);
+    NodoAVL* insertarRecursivo(NodoAVL* nodo, Paciente* p, bool& insertado);
     NodoAVL* buscarRecursivo(NodoAVL* nodo, std::string id);
     void destruirRecursivo(NodoAVL* nodo);
     void inordenRecursivo(NodoAVL* nodo);
@@ -25,16 +25,20 @@ private:
     NodoAVL* minimoNodo(NodoAVL* nodo);
     NodoAVL* quitarMinimo(NodoAVL* nodo);
     NodoAVL* eliminarRecursivo(NodoAVL* nodo, std::string id, bool& eliminado);
+    void balancesRecursivo(NodoAVL* nodo);
 
 public:
     ArbolAVL();
     ~ArbolAVL();
 
-    void insertar(Paciente* p);
+    bool insertar(Paciente* p);
     Paciente* buscarPorID(std::string id);
     void mostrarInorden();
     bool estaVacio() const;
     bool eliminar(std::string id);
+    int getAltura();
+    int getBalanceRaiz();
+    void mostrarFactoresBalance();
 };
 
 #endif
