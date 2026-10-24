@@ -209,3 +209,32 @@ void ArbolAVL::balancesRecursivo(NodoAVL* nodo) {
     balancesRecursivo(nodo->getLeft());
     balancesRecursivo(nodo->getRight());
 }
+
+
+void ArbolAVL::mostrarPreorden() {
+    preordenRecursivo(this->root);
+}
+
+
+void ArbolAVL::preordenRecursivo(NodoAVL* nodo) {
+    if (nodo != nullptr) {
+        std::cout << "ID: " << nodo->getPaciente()->getId()
+                  << " | Nombre: " << nodo->getPaciente()->getNombre() << std::endl;
+        preordenRecursivo(nodo->getLeft());
+        preordenRecursivo(nodo->getRight());
+    }
+}
+
+void ArbolAVL::mostrarPostorden() {
+    postordenRecursivo(this->root);
+}
+
+
+void ArbolAVL::postordenRecursivo(NodoAVL* nodo) {
+    if (nodo != nullptr) {
+        postordenRecursivo(nodo->getLeft());
+        postordenRecursivo(nodo->getRight());
+        std::cout << "ID: " << nodo->getPaciente()->getId()
+                  << " | Nombre: " << nodo->getPaciente()->getNombre() << std::endl;
+    }
+}

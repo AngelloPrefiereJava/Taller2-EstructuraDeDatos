@@ -19,7 +19,10 @@ private:
     NodoAVL* insertarRecursivo(NodoAVL* nodo, Paciente* p, bool& insertado);
     NodoAVL* buscarRecursivo(NodoAVL* nodo, std::string id);
     void destruirRecursivo(NodoAVL* nodo);
+    
     void inordenRecursivo(NodoAVL* nodo);
+    void preordenRecursivo(NodoAVL* nodo);
+    void postordenRecursivo(NodoAVL* nodo);
 
     NodoAVL* balancear(NodoAVL* nodo);
     NodoAVL* minimoNodo(NodoAVL* nodo);
@@ -33,7 +36,11 @@ public:
 
     bool insertar(Paciente* p);
     Paciente* buscarPorID(std::string id);
+
     void mostrarInorden();
+    void mostrarPreorden();
+    void mostrarPostorden(); 
+
     bool estaVacio() const;
     bool eliminar(std::string id);
     int getAltura();
