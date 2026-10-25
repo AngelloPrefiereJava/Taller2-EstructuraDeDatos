@@ -100,6 +100,12 @@ NodoAVL* ArbolAVL::buscarRecursivo(NodoAVL* nodo, std::string id, std::string* r
     }
 }
 
+Paciente* ArbolAVL::buscarPorNombre(std::string nombre) {
+    NodoAVL* resultado = buscarNombreRecursivo(this->root, nombre);
+    if (resultado != nullptr) return resultado->getPaciente();
+    return nullptr;
+}
+
 NodoAVL* ArbolAVL::buscarNombreRecursivo(NodoAVL* nodo, std::string nombre) {
     if (nodo == nullptr) return nullptr;
 

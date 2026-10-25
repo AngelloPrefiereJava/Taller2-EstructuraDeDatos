@@ -23,6 +23,10 @@ public:
     int cargarDesdeArchivo(const std::string& ruta);
     void atenderPacientes();
     void verDepartamentos();
+    void buscarPaciente();
+    void eliminarPaciente();
+    void verArbolDecision();
+    void menu();
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "Arbol.h"
+#include <iostream>
 
 Arbol::Arbol(){
     this->root = nullptr;
@@ -59,49 +60,78 @@ void Arbol::armarArbol(){
     this->root->setRight(pregTrauma);
 }
 
-std::string Arbol::clasificarPaciente(Paciente* p) {
-    if (this->root == nullptr) return "Error";
-    return evaluarRecursivo(this->root, p);
+static std::string aMinusculas(const std::string& s);
+
+static void agregarRuta(std::string& ruta, const std::string& texto) {
+    if (ruta != "") ruta += " -> ";
+    ruta += texto;
 }
 
-std::string Arbol::evaluarRecursivo(NodoArbol* nodo, Paciente* p) {
+std::string Arbol::clasificarPaciente(Paciente* p) {
+    std::string ruta;
+    return clasificarPaciente(p, ruta);
+}
 
+std::string Arbol::clasificarPaciente(Paciente* p, std::string& ruta) {
+    ruta = "";
+    if (this->root == nullptr) return "Error";
+    return evaluarRecursivo(this->root, p, ruta);
+}
+
+std::string Arbol::evaluarRecursivo(NodoArbol* nodo, Paciente* p, std::string& ruta) {
     if (nodo->esServicio()) {
         return nodo->getServicio();
     }
 
     std::string cond = nodo->getCondicion();
+    bool cumple;
+    std::string textoSi, textoNo;
 
     if (cond == "EDAD_<_14") {
-        if (p->getEdad() < 14){ return evaluarRecursivo(nodo->getLeft(), p);}
-        else {return evaluarRecursivo(nodo->getRight(), p);}
+        cumple = (p->getEdad() < 14);
+        textoSi = "Edad < 14";
+        textoNo = "Edad >= 14";
     }
     else if (cond == "TRAUMA_==_1") {
-        if (p->getTrauma() == 1) {return evaluarRecursivo(nodo->getLeft(), p);}
-        else {return evaluarRecursivo(nodo->getRight(), p);}
+        cumple = (p->getTrauma() == 1);
+        textoSi = "Trauma == 1";
+        textoNo = "Trauma == 0";
     }
     else if (cond == "REQUIERE_CIRUGIA_==_1") {
-        if (p->getRequiereCirugia() == 1) {return evaluarRecursivo(nodo->getLeft(), p);}
-        else {return evaluarRecursivo(nodo->getRight(), p);}
+        cumple = (p->getRequiereCirugia() == 1);
+        textoSi = "RequiereCirugia == 1";
+        textoNo = "RequiereCirugia == 0";
     }
     else if (cond == "SINTOMAS_NEUROLOGICOS_==_1") {
-        if (p->getSintomasNeurologicos() == 1) {return evaluarRecursivo(nodo->getLeft(), p);}
-        else {return evaluarRecursivo(nodo->getRight(), p);}
+        cumple = (p->getSintomasNeurologicos() == 1);
+        textoSi = "SintomasNeurologicos == 1";
+        textoNo = "SintomasNeurologicos == 0";
     }
     else if (cond == "TIPO_DOLOR_==_PECHO") {
-        if (p->getTipoDolor() == "pecho") {return evaluarRecursivo(nodo->getLeft(), p);}
-        else {return evaluarRecursivo(nodo->getRight(), p);}
+        cumple = (aMinusculas(p->getTipoDolor()) == "pecho");
+        textoSi = "TipoDolor == pecho";
+        textoNo = "TipoDolor != pecho";
     }
     else if (cond == "TEMP_>_38.5_O_DOLOR_>=_8") {
-        if (p->getTemperatura() > 38.5f || p->getDolor() >= 8) {return evaluarRecursivo(nodo->getLeft(), p);}
-        else {return evaluarRecursivo(nodo->getRight(), p);}
+        cumple = (p->getTemperatura() > 38.5f || p->getDolor() >= 8);
+        textoSi = "Temperatura > 38.5 o Dolor >= 8";
+        textoNo = "Temperatura <= 38.5 y Dolor < 8";
     }
     else if (cond == "DIAS_HOSP_>=_2") {
-        if (p->getDiasHospitalizacion() >= 2) {return evaluarRecursivo(nodo->getLeft(), p);}
-        else {return evaluarRecursivo(nodo->getRight(), p);}
+        cumple = (p->getDiasHospitalizacion() >= 2);
+        textoSi = "DiasHospitalizacion >= 2";
+        textoNo = "DiasHospitalizacion < 2";
+    }
+    else {
+        return "Desconocido";
     }
 
-    return "Desconocido";
+    if (cumple) {
+        agregarRuta(ruta, textoSi);
+        return evaluarRecursivo(nodo->getLeft(), p, ruta);
+    }
+    agregarRuta(ruta, textoNo);
+    return evaluarRecursivo(nodo->getRight(), p, ruta);
 }
 
 static std::string aMinusculas(const std::string& s) {
@@ -134,5 +164,37 @@ bool Arbol::datosValidos(Paciente* p, std::string& motivo) {
     if (p->getDiasHospitalizacion() < 0 || p->getDiasHospitalizacion() > 365) { motivo = "dias de hospitalizacion fuera de rango (0-365)"; return false; }
 
     return true;
+}
+
+
+void Arbol::imprimirNodo(NodoArbol* nodo, int nivel) {
+    for (int i = 0; i < nivel; i++) std::cout << "    ";
+    if (nodo->esServicio()) std::cout << "[Servicio: " << nodo->getServicio() << "]" << std::endl;
+    else std::cout << nodo->getCondicion() << std::endl;
+}
+
+void Arbol::mostrarPreorden() { preordenRecursivo(this->root, 0); }
+void Arbol::mostrarInorden() { inordenRecursivo(this->root, 0); }
+void Arbol::mostrarPostorden() { postordenRecursivo(this->root, 0); }
+
+void Arbol::preordenRecursivo(NodoArbol* nodo, int nivel) {
+    if (nodo == nullptr) return;
+    imprimirNodo(nodo, nivel);
+    preordenRecursivo(nodo->getLeft(), nivel + 1);
+    preordenRecursivo(nodo->getRight(), nivel + 1);
+}
+
+void Arbol::inordenRecursivo(NodoArbol* nodo, int nivel) {
+    if (nodo == nullptr) return;
+    inordenRecursivo(nodo->getLeft(), nivel + 1);
+    imprimirNodo(nodo, nivel);
+    inordenRecursivo(nodo->getRight(), nivel + 1);
+}
+
+void Arbol::postordenRecursivo(NodoArbol* nodo, int nivel) {
+    if (nodo == nullptr) return;
+    postordenRecursivo(nodo->getLeft(), nivel + 1);
+    postordenRecursivo(nodo->getRight(), nivel + 1);
+    imprimirNodo(nodo, nivel);
 }
 

@@ -1,0 +1,10 @@
+P001;Lucas Nunez;10;37.0;110.0;4;abdomen;0;0;0;0
+P002;Maria Perez;45;36.5;120.0;8;extremidad;1;0;1;5
+P003;Juan Soto;30;37.0;115.0;7;extremidad;1;0;0;2
+P004;Ana Silva;50;36.8;130.0;5;cabeza;0;1;0;1
+P005;Pedro Arce;60;37.2;140.0;6;pecho;0;0;0;3
+P006;Luisa Rey;25;39.0;110.0;9;abdomen;0;0;0;0
+P007;Diego Paz;40;37.0;120.0;3;otro;0;0;0;4
+P008;Rosa Gil;35;36.5;110.0;2;cabeza;0;0;0;0
+P009;Tomas Roa;12;38.0;105.0;6;otro;1;0;0;1
+P010;Luz Vega;80;36.0;160.0;4;pecho;0;1;0;5

@@ -142,10 +142,12 @@ void Hospital::atenderPacientes() {
     while (!this->cola.isEmpty()) {
         Paciente* p = this->cola.pop();
 
-        std::string servicio = this->arbolDecision.clasificarPaciente(p);
+        std::string ruta;
+        std::string servicio = this->arbolDecision.clasificarPaciente(p, ruta);
         int indice = indiceServicio(servicio);
 
         std::cout << "ID: " << p->getId() << " | " << p->getNombre() << std::endl;
+        std::cout << "Ruta: " << ruta << std::endl;
 
         if (indice < 0) {
             std::cout << "No se pudo asignar servicio (" << servicio << "). Paciente descartado." << std::endl;
@@ -171,7 +173,106 @@ void Hospital::verDepartamentos() {
         if (this->avl[i].estaVacio()) {
             std::cout << "Sin pacientes" << std::endl;
         } else {
+             std::cout << "Altura: " << this->avl[i].getAltura() << " | Factor de balance de la raiz: " << this->avl[i].getBalanceRaiz() << std::endl;
+            std::cout << "-- Inorden --" << std::endl;
             this->avl[i].mostrarInorden();
+            std::cout << "-- Preorden --" << std::endl;
+            this->avl[i].mostrarPreorden();
+            std::cout << "-- Postorden --" << std::endl;
+            this->avl[i].mostrarPostorden();
+            std::cout << "-- Altura y balance por nodo --" << std::endl;
+            this->avl[i].mostrarFactoresBalance();
         }
+    }
+}
+
+
+void Hospital::buscarPaciente() {
+    std::cout << "Indique el ID o Nombre del paciente: ";
+    std::string clave;
+    std::getline(std::cin, clave);
+
+    std::cout << "Buscando en AVL..." << std::endl;
+
+    for (int i = 0; i < NUM_SERVICIOS; i++) {
+        std::string ruta;
+        Paciente* p = this->avl[i].buscarPorID(clave, &ruta);
+        if (p != nullptr) {
+            std::cout << "Paciente encontrado:" << std::endl;
+            std::cout << "ID: " << p->getId() << " | Nombre: " << p->getNombre()
+                      << " | Edad: " << p->getEdad() << std::endl;
+            std::cout << "Departamento: " << this->nombres[i] << std::endl;
+            std::cout << "Ruta de busqueda: " << ruta << std::endl;
+            return;
+        }
+    }
+
+    for (int i = 0; i < NUM_SERVICIOS; i++) {
+        Paciente* p = this->avl[i].buscarPorNombre(clave);
+        if (p != nullptr) {
+            std::cout << "Paciente encontrado:" << std::endl;
+            std::cout << "ID: " << p->getId() << " | Nombre: " << p->getNombre()
+                      << " | Edad: " << p->getEdad() << std::endl;
+            std::cout << "Departamento: " << this->nombres[i] << std::endl;
+            std::cout << "Ruta de busqueda: busqueda por nombre (recorrido del AVL)" << std::endl;
+            return;
+        }
+    }
+
+    std::cout << "Paciente no encontrado." << std::endl;
+}
+
+void Hospital::eliminarPaciente() {
+    std::cout << "Indique el ID del paciente a eliminar: ";
+    std::string id;
+    std::getline(std::cin, id);
+
+    for (int i = 0; i < NUM_SERVICIOS; i++) {
+        if (this->avl[i].buscarPorID(id) != nullptr) {
+            this->avl[i].eliminar(id);
+            std::cout << "Paciente " << id << " eliminado de " << this->nombres[i] << "." << std::endl;
+            return;
+        }
+    }
+    std::cout << "No existe un paciente con ID " << id << "." << std::endl;
+}
+
+void Hospital::verArbolDecision() {
+    std::cout << "\n-- Preorden --" << std::endl;
+    this->arbolDecision.mostrarPreorden();
+    std::cout << "\n-- Inorden --" << std::endl;
+    this->arbolDecision.mostrarInorden();
+    std::cout << "\n-- Postorden --" << std::endl;
+    this->arbolDecision.mostrarPostorden();
+}
+
+void Hospital::menu() {
+    int opcion = 0;
+    while (opcion != 6) {
+        std::cout << "\n=== HOSPITAL MARMAJA ===" << std::endl;
+        std::cout << "1. Atender pacientes" << std::endl;
+        std::cout << "2. Ver departamentos" << std::endl;
+        std::cout << "3. Buscar paciente" << std::endl;
+        std::cout << "4. Eliminar paciente" << std::endl;
+        std::cout << "5. Ver arbol de decision" << std::endl;
+        std::cout << "6. Salir" << std::endl;
+        std::cout << "Seleccionar opcion: ";
+
+        std::string linea;
+        if (!std::getline(std::cin, linea)) return;   // se acabo la entrada
+
+        if (!aEntero(linea, opcion)) {
+            opcion = 0;
+            std::cout << "Opcion invalida." << std::endl;
+            continue;
+        }
+
+        if (opcion == 1) atenderPacientes();
+        else if (opcion == 2) verDepartamentos();
+        else if (opcion == 3) buscarPaciente();
+        else if (opcion == 4) eliminarPaciente();
+        else if (opcion == 5) verArbolDecision();
+        else if (opcion == 6) std::cout << "Hasta luego." << std::endl;
+        else std::cout << "Opcion invalida." << std::endl;
     }
 }
