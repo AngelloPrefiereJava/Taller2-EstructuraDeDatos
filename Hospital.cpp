@@ -259,7 +259,7 @@ void Hospital::menu() {
         std::cout << "Seleccionar opcion: ";
 
         std::string linea;
-        if (!std::getline(std::cin, linea)) return;   // se acabo la entrada
+        if (!std::getline(std::cin, linea)) return;
 
         if (!aEntero(linea, opcion)) {
             opcion = 0;
