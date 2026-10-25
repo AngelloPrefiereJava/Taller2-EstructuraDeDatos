@@ -17,9 +17,11 @@ private:
     NodoAVL* rotarLeft(NodoAVL* x);
     
     NodoAVL* insertarRecursivo(NodoAVL* nodo, Paciente* p, bool& insertado);
-    NodoAVL* buscarRecursivo(NodoAVL* nodo, std::string id);
+    NodoAVL* buscarRecursivo(NodoAVL* nodo, std::string id, std::string* ruta);
+    NodoAVL* buscarNombreRecursivo(NodoAVL* nodo, std::string nombre);
     void destruirRecursivo(NodoAVL* nodo);
     
+
     void inordenRecursivo(NodoAVL* nodo);
     void preordenRecursivo(NodoAVL* nodo);
     void postordenRecursivo(NodoAVL* nodo);
@@ -35,7 +37,8 @@ public:
     ~ArbolAVL();
 
     bool insertar(Paciente* p);
-    Paciente* buscarPorID(std::string id);
+    Paciente* buscarPorID(std::string id, std::string* ruta = nullptr);
+    Paciente* buscarPorNombre(std::string nombre);
 
     void mostrarInorden();
     void mostrarPreorden();

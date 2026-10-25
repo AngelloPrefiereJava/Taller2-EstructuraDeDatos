@@ -79,20 +79,36 @@ NodoAVL* ArbolAVL::insertarRecursivo(NodoAVL* nodo, Paciente* p, bool& insertado
     return balancear(nodo);
 }
 
-Paciente* ArbolAVL::buscarPorID(std::string id) {
-    NodoAVL* resultado = buscarRecursivo(this->root, id);
+Paciente* ArbolAVL::buscarPorID(std::string id, std::string* ruta) {
+    if (ruta != nullptr) *ruta = "Root";
+    NodoAVL* resultado = buscarRecursivo(this->root, id, ruta);
     if (resultado != nullptr) return resultado->getPaciente();
     return nullptr;
 }
 
-NodoAVL* ArbolAVL::buscarRecursivo(NodoAVL* nodo, std::string id) {
-    if (nodo == nullptr || nodo->getPaciente()->getId() == id)
-        return nodo;
+NodoAVL* ArbolAVL::buscarRecursivo(NodoAVL* nodo, std::string id, std::string* ruta) {
+    if (nodo == nullptr) return nullptr;
 
-    if (nodo->getPaciente()->getId() < id)
-        return buscarRecursivo(nodo->getRight(), id);
+    if (nodo->getPaciente()->getId() == id) return nodo;
 
-    return buscarRecursivo(nodo->getLeft(), id);
+    if (id < nodo->getPaciente()->getId()) {
+        if (ruta != nullptr) *ruta += " -> Izq";
+        return buscarRecursivo(nodo->getLeft(), id, ruta);
+    } else {
+        if (ruta != nullptr) *ruta += " -> Der";
+        return buscarRecursivo(nodo->getRight(), id, ruta);
+    }
+}
+
+NodoAVL* ArbolAVL::buscarNombreRecursivo(NodoAVL* nodo, std::string nombre) {
+    if (nodo == nullptr) return nullptr;
+
+    if (nodo->getPaciente()->getNombre() == nombre) return nodo;
+
+    NodoAVL* encontradoLeft = buscarNombreRecursivo(nodo->getLeft(), nombre);
+    if (encontradoLeft != nullptr) return encontradoLeft;
+
+    return buscarNombreRecursivo(nodo->getRight(), nombre);
 }
 
 void ArbolAVL::mostrarInorden() {
